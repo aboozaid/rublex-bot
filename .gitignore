@@ -1,0 +1,6 @@
+.env*
+/tmp
+/pb_data
+*.db
+*.dat
+*.exe
