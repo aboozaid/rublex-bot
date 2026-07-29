@@ -1,0 +1,29 @@
+# VCS / IDE
+.git
+.gitignore
+.vscode
+.idea
+
+# Secrets — never bake real env values into the image.
+# Set these in Coolify's environment variables UI instead.
+.env
+.env.*
+!env.example
+
+# PocketBase runtime data — must come from a mounted volume, not the image
+pb_data/
+pb_migrations/testdata/
+
+# gogram runtime session/cache — must come from a mounted volume, not the image
+gogram/
+*.session
+sessions/
+
+# Build artifacts
+bin/
+tmp/
+*.exe
+
+# Docs / misc
+*.md
+.github/

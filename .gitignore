@@ -1,4 +1,4 @@
-.env*
+.env
 /tmp
 /pb_data
 *.db

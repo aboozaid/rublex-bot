@@ -1,0 +1,31 @@
+services:
+  rublex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rublex:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${POCKETBASE_PORT:-8096}:8096"
+    volumes:
+      # Persist PocketBase's SQLite DB + files across deployments/restarts.
+      # In Coolify, map this to a "Persistent Storage" volume in the app's
+      # Storage tab pointing at the same container path.
+      - pb_data:/app/pb_data
+      # Persist gogram's Telegram session/auth cache so the bot doesn't
+      # have to re-authenticate (or lose FLOOD_WAIT/cache state) on every
+      # redeploy. Adjust the container-side path if your SessionName /
+      # storage config points somewhere other than ./gogram_session.
+      - gogram:/app/gogram
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8096/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  pb_data:
+  gogram:

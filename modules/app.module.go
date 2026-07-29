@@ -58,7 +58,13 @@ func NewAppModule() Module {
 		slog.Error("could not parse TELEGRAM_API_APP_ID value", "error", err)
 		os.Exit(1)
 	}
-	client, err := telegram.NewClient(telegram.ClientConfig{AppID: int32(appID), AppHash: telegramCfg.TelegramApiAppHash})
+	client, err := telegram.NewClient(telegram.ClientConfig{
+		AppID: int32(appID), 
+		AppHash: telegramCfg.TelegramApiAppHash,
+		Session: "gogram/session.dat",
+		DisableCache: true, // NOTE: We may need to enable this in future
+	},
+)
 	if err != nil {
 		slog.Error("could not create telegram client instance", "error", err)
 		os.Exit(1)
