@@ -6,6 +6,9 @@ import (
 	"p2ptrader/modules/accounts"
 	telegramgroups "p2ptrader/modules/telegram-groups"
 	telegramgroupsDto "p2ptrader/modules/telegram-groups/dto"
+	usersDto "p2ptrader/modules/users/dto"
+
+	"p2ptrader/modules/users"
 	"strconv"
 
 	"p2ptrader/modules/telegram/dto"
@@ -14,16 +17,18 @@ import (
 type Service interface {
 	GetUserAccounts(ctx context.Context, telegramID string) ([]dto.TelegramAccount, error)
 	CreateGroup(ctx context.Context, accountID string, createGroupParams dto.CreateGroupParams) error
+	RegisterUser(ctx context.Context, createUserParams dto.CreateUserParams) error
 	IsGroupAlreadyUsed(ctx context.Context, tgGroupID string) (bool, error)
 }
 
 type service struct {
 	accountsService       accounts.Service
 	telegramGroupsService telegramgroups.Service
+	usersService users.Service
 }
 
-func newService(accountsService accounts.Service, telegramGroupsService telegramgroups.Service) Service {
-	return service{accountsService, telegramGroupsService}
+func newService(accountsService accounts.Service, telegramGroupsService telegramgroups.Service, usersService users.Service) Service {
+	return service{accountsService, telegramGroupsService, usersService}
 }
 
 func (s service) GetUserAccounts(ctx context.Context, telegramID string) ([]dto.TelegramAccount, error) {
@@ -49,6 +54,16 @@ func (s service) CreateGroup(ctx context.Context, accountID string, createGroupP
 		GroupID:   strconv.FormatInt(createGroupParams.GroupID, 10),
 		AccountID: accountID,
 		Title:     createGroupParams.Title,
+	})
+}
+
+func (s service) RegisterUser(ctx context.Context, createUserParams dto.CreateUserParams) error {
+	return s.usersService.CreateUser(ctx, usersDto.CreateUserRequestParams{
+		TelegramID: createUserParams.TelegramID,
+		TelegramUsername: createUserParams.TelegramUsername,
+		LanguageCode: createUserParams.CountryCode,
+		FirstName: createUserParams.FirstName,
+		LastName: createUserParams.LastName,
 	})
 }
 

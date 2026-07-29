@@ -80,7 +80,7 @@ func NewAppModule() Module {
 	binance := binance.NewModule(app, cache, accounts)
 	exchanges := exchanges.NewModule(app, binance)
 	telegramGroups := telegramgroups.NewModule(app)
-	telegram := tg.NewModule(accounts, telegramGroups)
+	telegram := tg.NewModule(accounts, telegramGroups, users)
 
 	modules := []any{users, invitations, accounts, cache, binance, exchanges, telegramGroups, telegram}
 
@@ -112,7 +112,7 @@ func (m module) Start() error {
 	m.app.OnServe().BindFunc(func(e *core.ServeEvent) error {
 		if appCfg.Profile == "just" || appCfg.Profile == "docker" {
 			dir, _ := os.Getwd()
-			executablePath := fmt.Sprintf("%s/main.exe", dir)
+			executablePath := fmt.Sprintf("%s/main", dir)
 			cmd := exec.Command(executablePath, "superuser", "upsert", appCfg.PocketbaseAdminEmail, appCfg.PocketbaseAdminPassword)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr

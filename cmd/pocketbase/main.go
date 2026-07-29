@@ -8,8 +8,9 @@ import (
 )
 
 func main() {
-	env := os.Getenv("ENVIRONMENT")
-	if env != "development" {
+	isDev := os.Getenv("ENVIRONMENT") == "development"
+
+	if isDev {
 		// to be implemented, restore the database from litestream
 	}
 
