@@ -192,3 +192,11 @@ func Upsert() error {
 
 	return app.Start()
 }
+
+func Migrate() error {
+	app := pocketbase.New()
+
+	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{Automigrate: false})
+
+	return app.Start()
+}

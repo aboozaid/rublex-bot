@@ -38,11 +38,17 @@ func main() {
 	})*/
 	args := os.Args
 	isUpserting := slices.Contains(args, "upsert")
+	isMigrating := slices.Contains(args, "migrate")
 	if isUpserting {
 		if err := modules.Upsert(); err != nil {
 			slog.Error("Failed to create superuser account", "error", err)
 			os.Exit(1)
 		}
+	} else if isMigrating {
+		if err := modules.Migrate(); err != nil {
+			slog.Error("Failed to migrate the database", "error", err)
+			os.Exit(1)
+		}	
 	} else {
 		app := modules.NewAppModule()
 		if err := app.Start(); err != nil {
