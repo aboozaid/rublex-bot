@@ -14,7 +14,7 @@ set -e
 # which is what registers the `migrate` subcommand. If your app doesn't
 # register migratecmd, this step will fail — see DEPLOY.md.
 echo "Applying PocketBase migrations..."
-./server migrate up
+./main migrate up
 
 echo "Starting server..."
 # Binds on 0.0.0.0 (required so Coolify's proxy/other containers can reach
