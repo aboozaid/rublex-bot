@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
+	_ "p2ptrader/migrations"
 	"p2ptrader/modules"
 	"slices"
 )
