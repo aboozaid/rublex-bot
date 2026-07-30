@@ -17,6 +17,8 @@ echo "Applying PocketBase migrations..."
 ./server migrate up
 
 echo "Starting server..."
-# "$@" passes through whatever args/CMD the container was started with,
-# so this doesn't change how you invoke the binary otherwise.
-exec ./server "$@"
+# Binds on 0.0.0.0 (required so Coolify's proxy/other containers can reach
+# it — PocketBase's default 127.0.0.1 bind is not reachable from outside
+# the container) on the port from POCKETBASE_PORT (falls back to 8096).
+# "$@" still passes through any extra args/flags you add via CMD.
+exec ./server serve --http="0.0.0.0:${POCKETBASE_PORT:-8096}" "$@"
