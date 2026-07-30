@@ -29,11 +29,11 @@ ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 # across builds on the same Coolify host, so `docker build` only recompiles
 # what actually changed — this is what makes redeploys fast.
 #
-# NOTE: adjust "./cmd/server" below to wherever your package with
+# NOTE: adjust "./cmd/main" below to wherever your package with
 # `func main()` actually lives. If main.go sits at the repo root, use "."
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -trimpath -ldflags="-s -w" -o /app/bin/server ./cmd/pocketbase
+    go build -trimpath -ldflags="-s -w" -o /app/bin/main ./cmd/pocketbase
 
 # ---------- Runtime stage ----------
 FROM alpine:3.20 AS runtime
@@ -43,7 +43,7 @@ RUN apk add --no-cache ca-certificates tzdata wget \
 
 WORKDIR /app
 
-COPY --from=builder /app/bin/server ./server
+COPY --from=builder /app/bin/main ./main
 
 # Copy migration files into the runtime image so they're available whichever
 # way PocketBase reads them:

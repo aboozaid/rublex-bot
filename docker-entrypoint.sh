@@ -21,4 +21,4 @@ echo "Starting server..."
 # it — PocketBase's default 127.0.0.1 bind is not reachable from outside
 # the container) on the port from POCKETBASE_PORT (falls back to 8096).
 # "$@" still passes through any extra args/flags you add via CMD.
-exec ./server serve --http="0.0.0.0:${POCKETBASE_PORT:-8096}" "$@"
+exec ./main serve --http="0.0.0.0:${POCKETBASE_PORT:-8096}" "$@"
