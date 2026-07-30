@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${POCKETBASE_PORT:-8096}:8096"
+      - "${POCKETBASE_PORT:-8096}:${POCKETBASE_PORT:-8096}"
     volumes:
       # Persist PocketBase's SQLite DB + files across deployments/restarts.
       # In Coolify, map this to a "Persistent Storage" volume in the app's
@@ -20,7 +20,11 @@ services:
       # storage config points somewhere other than ./gogram_session.
       - gogram:/app/gogram
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8096/api/health"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:${POCKETBASE_PORT:-8096}/api/health || exit 1",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
